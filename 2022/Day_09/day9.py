@@ -9,12 +9,21 @@ def findPos (name, array):
             if array[i][j] == name:
                 return i, j
 
-def moveT (array):
+def moveT (array, direction):
     rowH, colH = findPos('H', array)
     try:
         rowT, colT = findPos('T', array)
     except TypeError:
-        rowT, colT = 0,0
+        if direction == 'U':
+            rowT, colT = rowH, colH - 1
+        elif direction == 'D':
+            rowT, colT = rowH, colH + 1
+        elif direction == 'L':
+            rowT, colT = rowH, colH + 1
+        elif direction == 'R':
+            rowT, colT = rowH, colH - 1
+        array[rowT][colT] = 'T'
+        rowT, colT = rowH, colH
     if (abs(colH - colT) > 1) and (abs(rowH - rowT) <= 1):
         if colH > colT:
             array[rowH][colH - 1] = 'T'
@@ -34,56 +43,56 @@ def moveT (array):
 def moveH (direction, array, step):
     rowH, colH = findPos('H', array)
     if direction == 'R':
-        if step > len(array[rowH]):
-            stepsToAdd = step - len(array[rowH])
+        if step + colH >= len(array[rowH]):
+            stepsToAdd = step - len(array[rowH]) + 1
             for m in range(stepsToAdd + 1):
                 array[rowH].append("-")
-        for m in range(colH + 1, colH + step, 1):
-            if array[rowH][m - 1] == 'H':
-                array[rowH][m - 1] = '-'
-            array[rowH][m] = 'H'
-            moveT(array)
+        for m in range(colH, colH + step, 1):
+            if array[rowH][m] == 'H':
+                array[rowH][m] = '-'
+            array[rowH][m + 1] = 'H'
+            moveT(array, direction)
     elif direction == 'L':
-        if step > len(array[rowH]):
-            stepsToAdd = step - len(array[rowH])
+        if step > colH:
+            stepsToAdd = step - len(array[rowH]) + 1
             C = []
             for m in range(stepsToAdd + 1):
                 C.append('-')
             C.extend(array[rowH])
             array[rowH] = C
             rowH, colH = findPos('H', array)
-        for m in range(colH - 1, colH - 1 - step, -1):
-            if array[rowH][m + 1] == 'H':
-                array[rowH][m + 1] = '-'
-            array[rowH][m] = 'H'
-            moveT(array)
+        for m in range(colH, colH - step, -1):
+            if array[rowH][m] == 'H':
+                array[rowH][m] = '-'
+            array[rowH][m - 1] = 'H'
+            moveT(array, direction)
     elif direction == 'U':
-        if step > len(array):
-            stepsToAdd = step - len(array)
+        if step > rowH:
+            stepsToAdd = step - len(array) + 1
             C = []
             for m in range(stepsToAdd + 1):
                 C.append(['-']*len(array[0]))
             C.extend(array)
             array = C
             rowH, colH = findPos('H', array)
-        for m in range(rowH + 1, rowH + 1 - step, -1):
-            if array[m-1][colH] == 'H':
-                array[m - 1][colH] = '-'
-            array[m - 2][colH] = 'H'
-            moveT(array)
+        for m in range(rowH, rowH - step, -1):
+            if array[m][colH] == 'H':
+                array[m][colH] = '-'
+            array[m - 1][colH] = 'H'
+            moveT(array, direction)
     elif direction == 'D':
-        if step > len(array):
-            stepsToAdd = step - len(array)
+        if step + rowH >= len(array):
+            stepsToAdd = step - len(array) + 1
             C = []
             for m in range(stepsToAdd + 1):
                 C.append(['-']*len(array[0]))
             array.extend(C)
             rowH, colH = findPos('H', array)
-        for m in range(rowH + 1, rowH - 1 + step, -1):
-            if array[m-1][colH] == 'H':
-                array[m - 1][colH] = '-'
-            array[m][colH] = 'H'
-            moveT(array)
+        for m in range(rowH, rowH - step, -1):
+            if array[m][colH] == 'H':
+                array[m][colH] = '-'
+            array[m+1][colH] = 'H'
+            moveT(array, direction)
     return array
 
 
@@ -91,3 +100,8 @@ for i in range(len(lines)):
     order = lines[i].strip().split()
     steps = int(order[1])
     motion = moveH(order[0], motion, steps)
+#    for j in range(len(motion)):
+#        print(motion[j])
+
+for i in range(len(motion)):
+    print(motion[i])
