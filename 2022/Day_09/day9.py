@@ -40,7 +40,8 @@ def moveT (array, direction):
             array[rowT][colT] = '#'
 
 
-def moveH (direction, array, step):
+def moveH (direction, array, step, prevB):
+    prev = 0
     rowH, colH = findPos('H', array)
     if direction == 'R':
         if step + colH >= len(array[rowH]):
@@ -49,7 +50,12 @@ def moveH (direction, array, step):
                 array[rowH].append("-")
         for m in range(colH, colH + step, 1):
             if array[rowH][m] == 'H':
-                array[rowH][m] = '-'
+                if prevB == 1:
+                    array[rowH][m] = 'T'
+                else:
+                    array[rowH][m] = '-'
+            if array[rowH][m + 1] == 'T':
+                prev = 1
             array[rowH][m + 1] = 'H'
             moveT(array, direction)
     elif direction == 'L':
@@ -63,7 +69,12 @@ def moveH (direction, array, step):
             rowH, colH = findPos('H', array)
         for m in range(colH, colH - step, -1):
             if array[rowH][m] == 'H':
-                array[rowH][m] = '-'
+                if prevB == 1:
+                    array[rowH][m] = 'T'
+                else:
+                    array[rowH][m] = '-'
+            if array[rowH][m - 1] == 'T':
+                prev = 1
             array[rowH][m - 1] = 'H'
             moveT(array, direction)
     elif direction == 'U':
@@ -77,7 +88,12 @@ def moveH (direction, array, step):
             rowH, colH = findPos('H', array)
         for m in range(rowH, rowH - step, -1):
             if array[m][colH] == 'H':
-                array[m][colH] = '-'
+                if prevB == 1:
+                    array[m][colH] = 'T'
+                else:
+                    array[m][colH] = '-'
+            if array[m - 1][colH] == 'T':
+                prev = 1
             array[m - 1][colH] = 'H'
             moveT(array, direction)
     elif direction == 'D':
@@ -90,16 +106,21 @@ def moveH (direction, array, step):
             rowH, colH = findPos('H', array)
         for m in range(rowH, rowH - step, -1):
             if array[m][colH] == 'H':
-                array[m][colH] = '-'
-            array[m+1][colH] = 'H'
+                if prevB == 1:
+                    array[m][colH] = 'T'
+                else:
+                    array[m][colH] = '-'
+            if array[m + 1][colH] == 'T':
+                prev = 1
+            array[m + 1][colH] = 'H'
             moveT(array, direction)
-    return array
+    return array, prev
 
-
+prev = 0
 for i in range(len(lines)):
     order = lines[i].strip().split()
     steps = int(order[1])
-    motion = moveH(order[0], motion, steps)
+    motion, prev = moveH(order[0], motion, steps, prev)
 #    for j in range(len(motion)):
 #        print(motion[j])
 
