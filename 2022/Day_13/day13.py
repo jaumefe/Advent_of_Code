@@ -36,7 +36,6 @@ index = 1
 res = 0
 
 while (n < len(lines) - 2):
-
     message1 = lines[n].strip().replace(",", "")
     message2 = lines[n+1].strip().replace(",", "")
     if len(message1) > len(message2):
