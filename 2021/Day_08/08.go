@@ -3,13 +3,16 @@ package main
 import (
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"strconv"
 	"strings"
+
+	"golang.org/x/exp/slices"
 )
 
 func main() {
-	input, err := os.ReadFile("08.txt")
+	input, err := os.ReadFile("prova.txt")
 	if err != nil {
 		log.Panic(err)
 	}
@@ -42,6 +45,53 @@ func part1(input string) int {
 
 func part2(input string) int {
 	var res int
+	var led []string
+	in := strings.Split(input, "\n")
+	segments := map[int]int{
+		0: 6, 1: 2, 2: 5, 3: 5, 4: 4, 5: 5, 6: 6, 7: 3, 8: 7, 9: 6,
+	}
+	for _, j := range in {
+		led = append(led, strings.Trim(strings.Split(j, "|")[1], " "))
+	}
+	var decode = []string{"cagedb", "ab", "gcdfa", "cdfbe", "eafb", "fbcad", "cefabd", "dab", "acedgfb", "cdfgeb"}
+	var sortedDecode []string
+	for _, i := range decode {
+		sortedDecode = append(sortedDecode, sortAlphabetically(i))
+	}
+	for _, i := range led {
+		message := strings.Split(i, " ")
+		for m, j := range message {
+			if len(j) == segments[1] {
+				res += 1 * int(math.Pow10(3-m))
+				j = ""
+			} else if len(j) == segments[4] {
+				res += 4 * int(math.Pow10(3-m))
+				j = ""
+			} else if len(j) == segments[7] {
+				res += 7 * int(math.Pow10(3-m))
+				j = ""
+			} else if len(j) == segments[8] {
+				res += 8 * int(math.Pow10(3-m))
+				j = ""
+			}
+			for l, k := range sortedDecode {
+				if sortAlphabetically(j) == k {
+					res += l * int(math.Pow10(3-m))
+				}
+			}
+		}
+		fmt.Println(res)
+	}
+	return res
+}
+
+func sortAlphabetically(s string) string {
+	var res string
+	s_temp := strings.Split(s, "")
+	slices.Sort(s_temp)
+	for i := 0; i < len(s_temp); i++ {
+		res += s_temp[i]
+	}
 	return res
 }
 
