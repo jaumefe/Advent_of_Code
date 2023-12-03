@@ -84,7 +84,6 @@ func part2(input string) int {
 				}
 			}
 		}
-		//fmt.Println(colors)
 		result += colors["blue"] * colors["red"] * colors["green"]
 	}
 	return result
