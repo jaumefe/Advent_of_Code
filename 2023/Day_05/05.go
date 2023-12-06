@@ -249,7 +249,6 @@ func translateFromMapToMapPt2(input []seed, mapData []maps) []seed {
 		var seed_temp1 seed
 		var seed_temp2 seed
 		var seed_temp []seed
-		//length := len(result)
 		for _, j := range mapData {
 			if i.origin >= j.source && i.origin < j.source+j.length {
 				if i.dest < j.source+j.length {
@@ -263,7 +262,6 @@ func translateFromMapToMapPt2(input []seed, mapData []maps) []seed {
 					result = append(result, seed_temp1)
 					seed_temp2.origin = j.source + j.length
 					seed_temp2.dest = i.dest
-					//result = append(result, seed_temp2)
 					seed_temp = append(seed_temp, seed_temp2)
 					result_1 = translateFromMapToMapPt2(seed_temp, mapData)
 					for _, k := range result_1 {
